@@ -49,6 +49,52 @@
         </next>
       </block>
     </statement>
+    <xml xmlns="http://www.w3.org/1999/xhtml" collection="false">
+  <!-- تم حذف بعض المتغيرات للتبسيط -->
+  <variables>
+    <variable type="" id="macd_line">MACD Line</variable>
+    <variable type="" id="signal_line">Signal Line</variable>
+  </variables>
+  
+  <!-- قم بإضافة تحديثات MACD في الجزء الخاص بالتهيئة -->
+  <block type="variables_set" id="macd_init" x="0" y="0">
+    <field name="VAR" id="macd_line" variabletype="">MACD Line</field>
+    <value name="VALUE">
+      <block type="macd" id="macd_block"></block>
+    </value>
+    <next>
+      <block type="variables_set" id="signal_init">
+        <field name="VAR" id="signal_line" variabletype="">Signal Line</field>
+        <value name="VALUE">
+          <block type="macd_signal" id="signal_block"></block>
+        </value>
+      </block>
+    </next>
+  </block>
+
+  <!-- قم بإضافة بلوك التحقق من شروط التداول باستخدام MACD -->
+  <block type="controls_if" id="macd_trade_condition" x="0" y="100">
+    <value name="IF0">
+      <block type="logic_compare" id="macd_compare">
+        <field name="OP">GT</field>
+        <value name="A">
+          <block type="variables_get" id="macd_var">
+            <field name="VAR" id="macd_line" variabletype="">MACD Line</field>
+          </block>
+        </value>
+        <value name="B">
+          <block type="variables_get" id="signal_var">
+            <field name="VAR" id="signal_line" variabletype="">Signal Line</field>
+          </block>
+        </value>
+      </block>
+    </value>
+    <statement name="DO0">
+      <block type="purchase" id="purchase_block">
+        <field name="PURCHASE_LIST">DIGITDIFF</field>
+      </block>
+    </statement>
+
   </block>
   <block type="trade" id="trade" x="0" y="237">
     <field name="MARKET_LIST">volidx</field>
